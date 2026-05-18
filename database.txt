@@ -1,0 +1,44 @@
+-- Tạo cơ sở dữ liệu và sử dụng nó
+CREATE DATABASE IF NOT EXISTS my_store;
+USE my_store;
+-- Tạo bảng danh mục sản phẩm
+CREATE TABLE IF NOT EXISTS category (
+id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+description TEXT
+);
+-- Tạo bảng sản phẩm
+CREATE TABLE IF NOT EXISTS product (
+id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+description TEXT,
+price DECIMAL(10,2) NOT NULL,
+image VARCHAR(255) DEFAULT NULL,
+category_id INT,
+FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE
+);
+
+USE my_store;
+
+INSERT INTO `category` (`name`, `description`) VALUES
+('Điện thoại', 'Các dòng smartphone mới nhất'),
+('Laptop', 'Máy tính xách tay làm việc và chơi game'),
+('Máy tính bảng', 'iPad và các dòng Tablet Android'),
+('Phụ kiện', 'Tai nghe, sạc dự phòng, cáp sạc');
+
+INSERT INTO `product` (`name`, `description`, `price`, `category_id`, `image`) VALUES
+-- Điện thoại
+('iPhone 15 Pro Max 256GB', 'Chip A17 Pro, khung Titan siêu bền.', 29490000, (SELECT id FROM category WHERE name = 'Điện thoại' LIMIT 1), 'iphone-15-pro-max_3.webp'),
+('Samsung Galaxy S24 Ultra', 'Camera 200MP, AI tích hợp thông minh.', 26990000, (SELECT id FROM category WHERE name = 'Điện thoại' LIMIT 1), 'ss-s24-ultra-xam-222_1.png'),
+
+-- Laptop
+('MacBook Air M3 13 inch', 'Chip M3 mạnh mẽ, mỏng nhẹ đẳng cấp.', 27990000, (SELECT id FROM category WHERE name = 'Laptop' LIMIT 1), 'mac-air-m3.webp'),
+('Laptop ASUS ROG Strix G16', 'Laptop Gaming RTX 4060, màn hình 165Hz.', 34490000, (SELECT id FROM category WHERE name = 'Laptop' LIMIT 1), 'g614ju-as73.webp'),
+
+-- Máy tính bảng
+('iPad Air 6 M2 11 inch', 'Hiệu năng M2, hỗ trợ Apple Pencil Pro.', 16490000, (SELECT id FROM category WHERE name = 'Máy tính bảng' LIMIT 1), 'ipad-air-6.jpg'),
+('Samsung Galaxy Tab S9 FE', 'Kháng nước IP68, kèm bút S-Pen.', 9990000, (SELECT id FROM category WHERE name = 'Máy tính bảng' LIMIT 1), 'ss-s24-ultra-xam-222_1.png'),
+
+-- Phụ kiện
+('AirPods Pro 2 USB-C', 'Chống ồn chủ động, âm thanh không gian.', 5890000, (SELECT id FROM category WHERE name = 'Phụ kiện' LIMIT 1), 'air-pod-pro.webp'),
+('Sạc Anker Prime 200W', 'Dung lượng 20000mAh, sạc nhanh cho Laptop.', 2350000, (SELECT id FROM category WHERE name = 'Phụ kiện' LIMIT 1), 'sac-du-phong-anker.webp');
