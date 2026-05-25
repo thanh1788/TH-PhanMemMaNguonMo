@@ -128,4 +128,32 @@ class ProductModel
         }
         return false;
     }
+
+    // Tìm kiếm sản phẩm theo tên hoặc mô tả
+    public function searchProducts($keyword)
+    {
+        $query = "SELECT p.id, p.name, p.description, p.price, p.image, c.name as category_name
+                  FROM " . $this->table_name . " p
+                  LEFT JOIN category c ON p.category_id = c.id
+                  WHERE p.name LIKE :keyword OR p.description LIKE :keyword
+                  ORDER BY p.name ASC";
+        $stmt = $this->conn->prepare($query);
+        $searchTerm = '%' . $keyword . '%';
+        $stmt->bindParam(':keyword', $searchTerm);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    // Lấy sản phẩm theo danh mục
+    public function getProductsByCategory($categoryId)
+    {
+        $query = "SELECT p.id, p.name, p.description, p.price, p.image, c.name as category_name
+                  FROM " . $this->table_name . " p
+                  LEFT JOIN category c ON p.category_id = c.id
+                  WHERE p.category_id = :category_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':category_id', $categoryId);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 }

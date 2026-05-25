@@ -20,19 +20,37 @@ class ProductController
     // Trang chủ hiển thị danh sách
     public function index()
     {
-        // Lấy tất cả danh mục để làm thanh điều hướng
         $categories = (new CategoryModel($this->db))->getCategories();
-        
-        // Lấy tất cả sản phẩm
         $products = $this->productModel->getProducts();
-        
-        // Tách sản phẩm theo nhóm danh mục trong mảng
+
         $productsByCategory = [];
         foreach ($products as $product) {
             $categoryName = $product->category_name ?? 'Khác';
             $productsByCategory[$categoryName][] = $product;
         }
-    
+
+        include 'app/views/product/list.php';
+    }
+
+    // Tìm kiếm sản phẩm
+    public function search()
+    {
+        $q = trim($_GET['q'] ?? '');
+        $categories = (new CategoryModel($this->db))->getCategories();
+
+        if (empty($q)) {
+            header('Location: /');
+            exit;
+        }
+
+        $products = $this->productModel->searchProducts($q);
+
+        $productsByCategory = [];
+        foreach ($products as $product) {
+            $categoryName = $product->category_name ?? 'Khác';
+            $productsByCategory[$categoryName][] = $product;
+        }
+
         include 'app/views/product/list.php';
     }
 
@@ -88,16 +106,15 @@ class ProductController
             $result = $this->productModel->addProduct($name, $description, $price, $category_id, $image);
 
             if (is_array($result)) {
-                // Nếu xảy ra lỗi Validate, xóa file ảnh vừa up tạm lên (nếu có) để tránh rác server
                 if ($image && file_exists($this->uploadDir . $image)) {
                     unlink($this->uploadDir . $image);
                 }
-
                 $errors = $result;
                 $categories = (new CategoryModel($this->db))->getCategories();
                 include 'app/views/product/add.php';
             } else {
-                header('Location: /'); // Điều hướng thẳng về trang chủ localhost:8080
+                $_SESSION['flash'] = ['type' => 'success', 'message' => 'Thêm sản phẩm thành công!'];
+                header('Location: /');
                 exit;
             }
         }
@@ -156,6 +173,7 @@ class ProductController
             $edit = $this->productModel->updateProduct($id, $name, $description, $price, $category_id, $image);
             
             if ($edit) {
+                $_SESSION['flash'] = ['type' => 'success', 'message' => 'Cập nhật sản phẩm thành công!'];
                 header('Location: /');
                 exit;
             } else {
@@ -170,15 +188,14 @@ class ProductController
         $product = $this->productModel->getProductById($id);
 
         if ($product) {
-            // Xóa dữ liệu trong database trước
             if ($this->productModel->deleteProduct($id)) {
-                // Nếu xóa trong DB thành công, tiến hành xóa file ảnh trên ổ đĩa
                 if (!empty($product->image)) {
                     $imagePath = $this->uploadDir . $product->image;
                     if (file_exists($imagePath)) {
                         unlink($imagePath);
                     }
                 }
+                $_SESSION['flash'] = ['type' => 'success', 'message' => 'Đã xóa sản phẩm thành công!'];
                 header('Location: /');
                 exit;
             } else {

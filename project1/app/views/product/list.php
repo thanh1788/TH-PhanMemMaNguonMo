@@ -1,277 +1,418 @@
 <?php include 'app/views/shares/header.php'; ?>
 
 <style>
-    :root {
-        --cps-red: #d70018;
-        --cps-red-light: #fef2f2;
-        --cps-dark: #222222;
-        --cps-gray: #707070;
-        --bg-body: #f8f9fa;
-        --radius-lg: 12px;
-        --radius-sm: 8px;
-    }
-
-    body { 
-        background-color: var(--bg-body); 
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-        color: var(--cps-dark);
-    }
-
-    /* SIDEBAR CELLPHONES STYLE */
-    .sidebar-menu { 
-        background: #fff; 
-        border-radius: var(--radius-lg); 
-        box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
-        padding: 12px 0; 
-        border: 1px solid #eaeaea;
-    }
-    .sidebar-menu .nav-link { 
-        color: #4a4a4a; 
-        font-weight: 600; 
-        font-size: 14px; 
-        padding: 10px 18px; 
-        display: flex; 
-        align-items: center; 
-        transition: all 0.25s ease;
-    }
-    .sidebar-menu .nav-link:hover { 
-        background: var(--cps-red-light); 
-        color: var(--cps-red); 
-        padding-left: 24px; 
-    }
-    .sidebar-menu .nav-link i { 
-        width: 28px; 
-        font-size: 16px; 
-        color: var(--cps-gray); 
-        transition: color 0.25s;
-    }
-    .sidebar-menu .nav-link:hover i { 
-        color: var(--cps-red); 
-    }
-
-    /* CAROUSEL BANNER */
-    .custom-carousel {
-        border-radius: var(--radius-lg);
-        overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    }
-
-    /* PRODUCT CARD STYLE */
-    .product-item {
+    /* ===== SIDEBAR ===== */
+    .sidebar-card {
         background: #fff;
-        border-radius: var(--radius-lg);
-        padding: 16px;
-        height: 100%;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        overflow: hidden;
+        border: 1px solid #eee;
+    }
+    .sidebar-header {
+        background: #d70018;
+        color: #fff;
+        padding: 12px 16px;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border-bottom: 1px solid #f5f5f5;
+        transition: all 0.2s;
+    }
+    .sidebar-link:hover, .sidebar-link.active {
+        background: #fff0f0;
+        color: #d70018;
+        padding-left: 22px;
+    }
+    .sidebar-link i { width: 20px; color: #999; font-size: 14px; }
+    .sidebar-link:hover i, .sidebar-link.active i { color: #d70018; }
+
+    /* ===== BANNER ===== */
+    .banner-carousel {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .banner-carousel .carousel-item img {
+        height: 300px;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    /* ===== PROMO STRIP ===== */
+    .promo-strip {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+        border: 1px solid #eee;
+    }
+    .promo-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #333;
+    }
+    .promo-item i { font-size: 22px; color: #d70018; }
+
+    /* ===== SECTION TITLE ===== */
+    .section-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 28px 0 14px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    .section-title h2 {
+        font-size: 18px;
+        font-weight: 800;
+        color: #1a1a1a;
+        margin: 0;
+        text-transform: uppercase;
         position: relative;
+        padding-left: 14px;
+    }
+    .section-title h2::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: #d70018;
+        border-radius: 2px;
+    }
+    .section-title a {
+        font-size: 13px;
+        color: #d70018;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    .section-title a:hover { text-decoration: underline; }
+
+    /* ===== PRODUCT CARD ===== */
+    .product-card {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #f0f0f0;
+        overflow: hidden;
+        height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        transition: all 0.3s ease;
+        position: relative;
     }
-    .product-item:hover {
-        box-shadow: 0 12px 24px rgba(0,0,0,0.08);
-        transform: translateY(-6px);
+    .product-card:hover {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
         border-color: #e0e0e0;
     }
-    .product-img {
+    .product-card-img {
         height: 180px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 12px;
+        padding: 16px;
+        background: #fafafa;
         overflow: hidden;
     }
-    .product-img img { 
-        max-height: 100%; 
-        max-width: 100%; 
+    .product-card-img img {
+        max-height: 100%;
+        max-width: 100%;
         object-fit: contain;
-        transition: transform 0.4s ease; 
+        transition: transform 0.4s ease;
     }
-    .product-item:hover .product-img img {
-        transform: scale(1.04);
+    .product-card:hover .product-card-img img { transform: scale(1.06); }
+
+    .product-card-body {
+        padding: 12px 14px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
     }
-    
-    .product-name {
-        font-size: 14.5px;
+    .product-card-name {
+        font-size: 14px;
         font-weight: 600;
-        color: var(--cps-dark);
+        color: #1a1a1a;
         line-height: 1.4;
         height: 40px;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
+        text-decoration: none;
         transition: color 0.2s;
     }
-    .product-item:hover .product-name {
-        color: var(--cps-red);
-    }
+    .product-card-name:hover { color: #d70018; }
+    .product-card:hover .product-card-name { color: #d70018; }
 
-    .price-box {
-        margin-bottom: 8px;
-        display: flex;
-        align-items: baseline;
-        flex-wrap: wrap;
-    }
-    .price-now { 
-        color: var(--cps-red); 
-        font-weight: 700; 
-        font-size: 16px; 
-    }
-    .price-old { 
-        color: #999; 
-        text-decoration: line-through; 
-        font-size: 12.5px; 
-        margin-left: 6px; 
+    .price-now { color: #d70018; font-weight: 700; font-size: 16px; }
+    .price-old { color: #999; text-decoration: line-through; font-size: 12px; margin-left: 6px; }
+    .discount-badge {
+        background: #d70018;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-left: 6px;
     }
 
     .promo-tag {
-        background: #f2f4f7;
-        color: #444;
-        font-size: 11px;
-        font-weight: 500;
+        background: #f8f9fa;
+        border: 1px dashed #ddd;
+        border-radius: 6px;
         padding: 4px 8px;
-        border-radius: var(--radius-sm);
-        display: inline-block;
-        border: 1px dashed #d1d5db;
-        width: 100%;
-        text-overflow: ellipsis;
+        font-size: 11px;
+        color: #555;
+        margin-top: 6px;
         white-space: nowrap;
         overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    /* SECTION TITLE */
-    .block-title {
+    .btn-add-cart {
+        background: #d70018;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        width: 100%;
+        cursor: pointer;
+        transition: background 0.2s;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+    }
+    .btn-add-cart:hover { background: #b5001a; color: #fff; }
+
+    .admin-bar {
+        padding: 6px 14px 10px;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 40px;
+        justify-content: flex-end;
+        gap: 6px;
+        border-top: 1px solid #f5f5f5;
+    }
+    .admin-bar a {
+        font-size: 12px;
+        padding: 3px 8px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .btn-edit { background: #fff3cd; color: #856404; }
+    .btn-edit:hover { background: #ffc107; color: #000; }
+    .btn-del { background: #f8d7da; color: #842029; }
+    .btn-del:hover { background: #dc3545; color: #fff; }
+
+    /* ===== SEARCH RESULT HEADER ===== */
+    .search-result-header {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px 20px;
         margin-bottom: 16px;
-    }
-    .block-title h2 { 
-        font-size: 20px; 
-        font-weight: 700; 
-        text-transform: uppercase; 
-        margin-bottom: 0; 
-        color: #333;
-        position: relative;
+        border: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
-    /* ADMIN ACTIONS BAR */
-    .admin-actions {
-        background: #f8f9fa;
-        padding: 6px 10px;
-        border-radius: var(--radius-sm);
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+        background: #fff;
+        border-radius: 12px;
+        padding: 60px 20px;
+        text-align: center;
+        border: 1px solid #eee;
     }
-
-    html { scroll-behavior: smooth; }
+    .empty-state img { width: 80px; opacity: 0.3; margin-bottom: 16px; }
 </style>
 
-<div class="container mt-4">
-    <div class="row">
-        <!-- Sidebar Danh mục -->
-        <div class="col-lg-3 d-none d-lg-block">
-            <div class="sidebar-menu sticky-top" style="top: 24px; z-index: 100;">
-                <div class="px-3 py-2 font-weight-bold text-uppercase border-bottom mb-2" style="font-size: 12px; color: #888; letter-spacing: 0.5px;">
-                    Danh mục nổi bật
+<div class="container mt-4 mb-5">
+    <div class="row g-3">
+
+        <!-- SIDEBAR -->
+        <div class="col-lg-2 d-none d-lg-block">
+            <div class="sidebar-card sticky-top" style="top: 80px;">
+                <div class="sidebar-header">
+                    <i class="fas fa-th-large"></i> Danh mục
                 </div>
-                <nav class="nav flex-column">
-                    <?php foreach (array_keys($productsByCategory) as $catName): ?>
-                        <a class="nav-link" href="#cat-<?php echo md5($catName); ?>">
-                            <i class="fas fa-mobile-alt"></i> <?php echo htmlspecialchars($catName); ?>
-                        </a>
-                    <?php endforeach; ?>
-                    <a class="nav-link text-primary mt-2 border-top pt-2" href="/Category">
+                <a href="/" class="sidebar-link <?= empty($_GET['cat']) && empty($_GET['q']) ? 'active' : '' ?>">
+                    <i class="fas fa-home"></i> Tất cả sản phẩm
+                </a>
+                <?php foreach (array_keys($productsByCategory) as $catName): ?>
+                    <a class="sidebar-link" href="#cat-<?= md5($catName) ?>">
+                        <i class="fas fa-mobile-alt"></i> <?= htmlspecialchars($catName) ?>
+                    </a>
+                <?php endforeach; ?>
+                <div style="border-top: 2px solid #f0f0f0; margin-top: 4px; padding-top: 4px;">
+                    <a href="/Category" class="sidebar-link" style="color: #0d6efd;">
                         <i class="fas fa-cog"></i> Quản lý danh mục
                     </a>
-                </nav>
+                    <a href="/Product/add" class="sidebar-link" style="color: #198754;">
+                        <i class="fas fa-plus-circle"></i> Thêm sản phẩm
+                    </a>
+                </div>
             </div>
         </div>
 
-        <!-- Banner & Sản phẩm -->
-        <div class="col-lg-9 col-md-12">
-            <!-- Carousel Banner -->
-            <div id="cpsBanner" class="carousel slide custom-carousel mb-4" data-ride="carousel" data-interval="3500">
-                <ol class="carousel-indicators">
-                    <li data-target="#cpsBanner" data-slide-to="0" class="active"></li>
-                    <li data-target="#cpsBanner" data-slide-to="1"></li>
-                    <li data-target="#cpsBanner" data-slide-to="2"></li>
-                </ol>
+        <!-- MAIN CONTENT -->
+        <div class="col-lg-10">
 
-                <div class="carousel-inner" style="height: 320px;">
-                    <div class="carousel-item active">
-                        <img src="https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=1200" class="d-block w-100 h-100" style="object-fit: cover;" alt="Banner 1">
+            <?php if (!empty($_GET['q'])): ?>
+                <!-- SEARCH RESULT HEADER -->
+                <div class="search-result-header">
+                    <div>
+                        <i class="fas fa-search me-2 text-muted"></i>
+                        Kết quả tìm kiếm cho: <strong>"<?= htmlspecialchars($_GET['q']) ?>"</strong>
                     </div>
-                    <div class="carousel-item">
-                        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1200" class="d-block w-100 h-100" style="object-fit: cover;" alt="Banner 2">
+                    <a href="/" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i> Xóa tìm kiếm
+                    </a>
+                </div>
+            <?php else: ?>
+                <!-- BANNER CAROUSEL -->
+                <div id="mainBanner" class="carousel slide banner-carousel mb-4" data-bs-ride="carousel" data-bs-interval="4000">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#mainBanner" data-bs-slide-to="0" class="active"></button>
+                        <button type="button" data-bs-target="#mainBanner" data-bs-slide-to="1"></button>
+                        <button type="button" data-bs-target="#mainBanner" data-bs-slide-to="2"></button>
                     </div>
-                    <div class="carousel-item">
-                        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200" class="d-block w-100 h-100" style="object-fit: cover;" alt="Banner 3">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=1200&q=80" alt="Banner iPhone">
+                            <div class="carousel-caption d-none d-md-block" style="background: rgba(0,0,0,0.4); border-radius: 10px; padding: 12px 20px;">
+                                <h5 class="fw-bold">iPhone 16 Series</h5>
+                                <p class="small mb-0">Trải nghiệm đỉnh cao - Giá ưu đãi nhất</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1200&q=80" alt="Banner Laptop">
+                            <div class="carousel-caption d-none d-md-block" style="background: rgba(0,0,0,0.4); border-radius: 10px; padding: 12px 20px;">
+                                <h5 class="fw-bold">Laptop Gaming & Văn phòng</h5>
+                                <p class="small mb-0">Hiệu năng mạnh mẽ - Thiết kế sang trọng</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=1200&q=80" alt="Banner Phụ kiện">
+                            <div class="carousel-caption d-none d-md-block" style="background: rgba(0,0,0,0.4); border-radius: 10px; padding: 12px 20px;">
+                                <h5 class="fw-bold">Phụ kiện chính hãng</h5>
+                                <p class="small mb-0">Đa dạng - Chất lượng - Giá tốt</p>
+                            </div>
+                        </div>
                     </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#mainBanner" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#mainBanner" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
                 </div>
 
-                <a class="carousel-control-prev" href="#cpsBanner" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Trước</span>
-                </a>
-                <a class="carousel-control-next" href="#cpsBanner" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Sau</span>
-                </a>
-            </div>
+                <!-- PROMO STRIP -->
+                <div class="promo-strip mb-4">
+                    <div class="promo-item">
+                        <i class="fas fa-truck"></i>
+                        <div><strong>Miễn phí vận chuyển</strong><br><small class="text-muted">Đơn hàng từ 500K</small></div>
+                    </div>
+                    <div class="promo-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <div><strong>Bảo hành chính hãng</strong><br><small class="text-muted">1 đổi 1 trong 30 ngày</small></div>
+                    </div>
+                    <div class="promo-item">
+                        <i class="fas fa-credit-card"></i>
+                        <div><strong>Trả góp 0%</strong><br><small class="text-muted">Qua thẻ tín dụng</small></div>
+                    </div>
+                    <div class="promo-item">
+                        <i class="fas fa-headset"></i>
+                        <div><strong>Hỗ trợ 24/7</strong><br><small class="text-muted">Hotline: 1800 2097</small></div>
+                    </div>
+                </div>
+            <?php endif; ?>
 
-            <!-- Danh sách sản phẩm -->
+            <!-- PRODUCT SECTIONS -->
             <?php if (empty($productsByCategory)): ?>
-                <div class="bg-white text-center p-5 rounded-lg border shadow-sm">
-                    <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="80" class="mb-3" style="opacity: 0.3;">
-                    <h5 class="text-muted font-weight-normal">Chưa có sản phẩm nào trong hệ thống.</h5>
+                <div class="empty-state">
+                    <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" alt="empty">
+                    <h5 class="text-muted fw-normal">
+                        <?= !empty($_GET['q']) ? 'Không tìm thấy sản phẩm phù hợp.' : 'Chưa có sản phẩm nào trong hệ thống.' ?>
+                    </h5>
+                    <?php if (!empty($_GET['q'])): ?>
+                        <a href="/" class="btn btn-danger mt-3">Xem tất cả sản phẩm</a>
+                    <?php else: ?>
+                        <a href="/Product/add" class="btn btn-danger mt-3"><i class="fas fa-plus me-2"></i>Thêm sản phẩm đầu tiên</a>
+                    <?php endif; ?>
                 </div>
             <?php else: ?>
                 <?php foreach ($productsByCategory as $categoryName => $items): ?>
-                    <div class="block-title" id="cat-<?php echo md5($categoryName); ?>">
-                        <h2><?php echo htmlspecialchars($categoryName); ?></h2>
-                        <a href="#" class="text-danger font-weight-bold small text-decoration-none">Xem tất cả <i class="fas fa-chevron-right ml-1" style="font-size: 10px;"></i></a>
+                    <div class="section-title" id="cat-<?= md5($categoryName) ?>">
+                        <h2><?= htmlspecialchars($categoryName) ?></h2>
+                        <a href="#">Xem tất cả <i class="fas fa-chevron-right ms-1" style="font-size: 10px;"></i></a>
                     </div>
 
-                    <div class="row mx-n1">
+                    <div class="row g-2 mb-2">
                         <?php foreach ($items as $product): ?>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-6 px-1 mb-2">
-                                <div class="product-item">
-                                    <div>
-                                        <!-- Hình ảnh -->
-                                        <div class="product-img">
-                                            <?php $imgSrc = (filter_var($product->image, FILTER_VALIDATE_URL)) ? $product->image : "/public/uploads/products/" . $product->image; ?>
-                                            <img src="<?php echo $imgSrc; ?>" alt="<?php echo $product->name; ?>" loading="lazy">
-                                        </div>
-                                        
-                                        <!-- Tên sản phẩm -->
-                                        <h3 class="product-name">
-                                            <a href="/Product/show/<?php echo $product->id; ?>" class="text-decoration-none">
-                                                <?php echo htmlspecialchars($product->name); ?>
-                                            </a>
-                                        </h3>
-                                        
-                                        <!-- Giá cả -->
-                                        <div class="price-box">
-                                            <span class="price-now"><?php echo number_format($product->price, 0, ',', '.'); ?>đ</span>
-                                            <span class="price-old"><?php echo number_format($product->price * 1.15, 0, ',', '.'); ?>đ</span>
-                                        </div>
-                                        
-                                        <!-- Nhãn khuyến mãi -->
-                                        <div class="promo-tag mb-3">
-                                            <i class="fas fa-gift text-danger mr-1"></i> Thu cũ đổi mới - Trợ giá 1 triệu
-                                        </div>
+                            <div class="col-xl-3 col-lg-4 col-md-4 col-6">
+                                <div class="product-card">
+                                    <div class="product-card-img">
+                                        <?php
+                                        $imgSrc = !empty($product->image)
+                                            ? (filter_var($product->image, FILTER_VALIDATE_URL) ? $product->image : "/public/uploads/products/" . $product->image)
+                                            : "https://via.placeholder.com/200x200?text=No+Image";
+                                        ?>
+                                        <img src="<?= $imgSrc ?>" alt="<?= htmlspecialchars($product->name) ?>" loading="lazy">
                                     </div>
-                                    
-                                    <!-- Nút thao tác Admin -->
-                                    <div class="admin-actions d-flex justify-content-between align-items-center">
-                                        <small class="text-muted" style="font-size: 11px;">Hành động:</small>
-                                        <div>
-                                            <a href="/Product/edit/<?php echo $product->id; ?>" class="btn btn-sm btn-link text-warning p-1 mr-2" title="Sửa"><i class="fas fa-edit"></i></a>
-                                            <a href="/Product/delete/<?php echo $product->id; ?>" class="btn btn-sm btn-link text-danger p-1" onclick="return confirm('Xóa sản phẩm này?')" title="Xóa"><i class="fas fa-trash"></i></a>
+                                    <div class="product-card-body">
+                                        <a href="/Product/show/<?= $product->id ?>" class="product-card-name">
+                                            <?= htmlspecialchars($product->name) ?>
+                                        </a>
+                                        <div class="d-flex align-items-baseline flex-wrap">
+                                            <span class="price-now"><?= number_format($product->price, 0, ',', '.') ?>đ</span>
+                                            <span class="price-old"><?= number_format($product->price * 1.15, 0, ',', '.') ?>đ</span>
+                                            <span class="discount-badge">-15%</span>
                                         </div>
+                                        <div class="promo-tag">
+                                            <i class="fas fa-gift me-1" style="color: #d70018;"></i> Thu cũ đổi mới - Trợ giá 1 triệu
+                                        </div>
+                                        <a href="/Cart/add/<?= $product->id ?>" class="btn-add-cart">
+                                            <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                        </a>
+                                    </div>
+                                    <div class="admin-bar">
+                                        <a href="/Product/edit/<?= $product->id ?>" class="btn-edit">
+                                            <i class="fas fa-edit me-1"></i>Sửa
+                                        </a>
+                                        <a href="/Product/delete/<?= $product->id ?>" class="btn-del"
+                                           onclick="return confirm('Xóa sản phẩm này?')">
+                                            <i class="fas fa-trash me-1"></i>Xóa
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -279,9 +420,9 @@
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
+
         </div>
     </div>
 </div>
 
-<div class="mt-5"></div> 
 <?php include 'app/views/shares/footer.php'; ?>
