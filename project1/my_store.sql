@@ -143,3 +143,36 @@ INSERT INTO `product` (`name`, `description`, `price`, `category_id`, `image`) V
 --               NOT NULL DEFAULT 'pending' AFTER `total_price`,
 --   ADD COLUMN `note` TEXT DEFAULT NULL AFTER `status`,
 --   ADD COLUMN `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `created_at`;
+
+-- ============================================================
+-- 5. BẢNG NGƯỜI DÙNG (Hệ thống phân quyền)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS `users` (
+    `id`             INT AUTO_INCREMENT PRIMARY KEY,
+    `full_name`      VARCHAR(100)  NOT NULL,
+    `email`          VARCHAR(150)  NOT NULL UNIQUE,
+    `password`       VARCHAR(255)  NOT NULL,
+    `phone`          VARCHAR(20)   DEFAULT NULL,
+    `address`        TEXT          DEFAULT NULL,
+    `avatar`         VARCHAR(255)  DEFAULT NULL,
+    `role`           ENUM('admin','user') NOT NULL DEFAULT 'user',
+    `status`         ENUM('active','locked') NOT NULL DEFAULT 'active',
+    `is_verified`    TINYINT(1)   NOT NULL DEFAULT 0,
+    `verify_token`   VARCHAR(64)  DEFAULT NULL,
+    `reset_token`    VARCHAR(64)  DEFAULT NULL,
+    `reset_expires`  DATETIME     DEFAULT NULL,
+    `remember_token` VARCHAR(64)  DEFAULT NULL,
+    `created_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX `idx_remember_token` (`remember_token`),
+    INDEX `idx_verify_token`   (`verify_token`),
+    INDEX `idx_reset_token`    (`reset_token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================
+-- 6. DỮ LIỆU MẪU - TÀI KHOẢN
+-- Admin:  admin@mixitech.vn  / admin123
+-- User:   user@mixitech.vn   / user123
+-- QUAN TRỌNG: Sau khi import, truy cập http://localhost/project1/setup_users.php
+-- để tạo bảng và tài khoản với hash password đúng!
+-- ============================================================

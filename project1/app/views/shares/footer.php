@@ -41,10 +41,18 @@
             <div class="col-lg-2 col-md-6 col-6">
                 <h6 class="fw-bold text-white mb-3 text-uppercase" style="font-size: 13px; letter-spacing: 0.5px;">Quản trị</h6>
                 <ul class="list-unstyled small">
+                    <?php if (isset($_isAdmin) && $_isAdmin): ?>
                     <li class="mb-2"><a href="/Product/add" class="text-decoration-none" style="color: #aaa;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#aaa'"><i class="fas fa-chevron-right me-1" style="font-size: 10px;"></i>Thêm sản phẩm</a></li>
                     <li class="mb-2"><a href="/Category" class="text-decoration-none" style="color: #aaa;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#aaa'"><i class="fas fa-chevron-right me-1" style="font-size: 10px;"></i>Danh mục</a></li>
                     <li class="mb-2"><a href="/Category/add" class="text-decoration-none" style="color: #aaa;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#aaa'"><i class="fas fa-chevron-right me-1" style="font-size: 10px;"></i>Thêm danh mục</a></li>
                     <li class="mb-2"><a href="/Order/admin" class="text-decoration-none" style="color: #aaa;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#aaa'"><i class="fas fa-chevron-right me-1" style="font-size: 10px;"></i>Quản lý đơn hàng</a></li>
+                    <?php else: ?>
+                    <li class="mb-2"><a href="/Auth/login" class="text-decoration-none" style="color: #aaa;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#aaa'"><i class="fas fa-chevron-right me-1" style="font-size: 10px;"></i>Đăng nhập</a></li>
+                    <li class="mb-2"><a href="/Auth/register" class="text-decoration-none" style="color: #aaa;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#aaa'"><i class="fas fa-chevron-right me-1" style="font-size: 10px;"></i>Đăng ký</a></li>
+                    <?php if (isset($_loggedIn) && $_loggedIn): ?>
+                    <li class="mb-2"><a href="/User/profile" class="text-decoration-none" style="color: #aaa;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#aaa'"><i class="fas fa-chevron-right me-1" style="font-size: 10px;"></i>Hồ sơ cá nhân</a></li>
+                    <?php endif; ?>
+                    <?php endif; ?>
                 </ul>
             </div>
 

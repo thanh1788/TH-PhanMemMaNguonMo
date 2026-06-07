@@ -3,6 +3,20 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+// AUTO-LOGIN từ Remember Me cookie (chạy cho mọi request)
+if (!isset($_SESSION['user_id']) && !empty($_COOKIE['remember_token'])) {
+    require_once 'app/config/database.php';
+    require_once 'app/models/UserModel.php';
+    require_once 'app/helpers/AuthHelper.php';
+    $__db    = (new Database())->getConnection();
+    $__um    = new UserModel($__db);
+    $__user  = $__um->findByRememberToken($_COOKIE['remember_token']);
+    if ($__user && $__user->status === 'active' && $__user->is_verified) {
+        AuthHelper::loginSession($__user);
+    }
+    unset($__db, $__um, $__user);
+}
+
 // 1. LẤY VÀ LÀM SẠCH URL
 $urlInput = $_GET['url'] ?? '';
 $urlInput = rtrim($urlInput, '/');
@@ -25,22 +39,27 @@ if (empty($url[0])) {
 $controllerPath = 'app/controllers/' . $controllerName . '.php';
 
 if (!file_exists($controllerPath)) {
-    header("HTTP/1.0 404 Not Found");
-    die('Lỗi 404: Controller <b>' . $controllerName . '</b> không tồn tại.');
+    http_response_code(404);
+    include 'app/views/errors/404.php';
+    exit;
 }
 
 require_once $controllerPath;
 
 // 4. KHỞI TẠO CONTROLLER
 if (!class_exists($controllerName)) {
-    die('Lỗi: Lớp <b>' . $controllerName . '</b> không được định nghĩa trong file.');
+    http_response_code(404);
+    include 'app/views/errors/404.php';
+    exit;
 }
 
 $controller = new $controllerName();
 
 // 5. KIỂM TRA PHƯƠNG THỨC (ACTION) TRONG CONTROLLER
 if (!method_exists($controller, $action)) {
-    die('Lỗi: Hành động <b>' . $action . '</b> không tồn tại trong ' . $controllerName);
+    http_response_code(404);
+    include 'app/views/errors/404.php';
+    exit;
 }
 
 // 6. GỌI ACTION & TRUYỀN THAM SỐ AN TOÀN

@@ -145,7 +145,8 @@
                         </button>
                     </div>
 
-                    <div class="d-flex gap-2">
+                    <?php if ($_isAdmin): ?>
+                    <div class="d-flex gap-2 mb-3">
                         <a href="/Product/edit/<?= $product->id ?>" class="btn btn-sm btn-outline-warning">
                             <i class="fas fa-edit me-1"></i>Chỉnh sửa
                         </a>
@@ -154,6 +155,7 @@
                             <i class="fas fa-trash me-1"></i>Xóa
                         </a>
                     </div>
+                    <?php endif; ?>
 
                     <div class="policy-box">
                         <div class="policy-item">

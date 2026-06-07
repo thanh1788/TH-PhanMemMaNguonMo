@@ -273,12 +273,14 @@
                     </a>
                 <?php endforeach; ?>
                 <div style="border-top: 2px solid #f0f0f0; margin-top: 4px; padding-top: 4px;">
+                    <?php if ($_isAdmin): ?>
                     <a href="/Category" class="sidebar-link" style="color: #0d6efd;">
                         <i class="fas fa-cog"></i> Quản lý danh mục
                     </a>
                     <a href="/Product/add" class="sidebar-link" style="color: #198754;">
                         <i class="fas fa-plus-circle"></i> Thêm sản phẩm
                     </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -406,6 +408,7 @@
                                         </a>
                                     </div>
                                     <div class="admin-bar">
+                                        <?php if ($_isAdmin): ?>
                                         <a href="/Product/edit/<?= $product->id ?>" class="btn-edit">
                                             <i class="fas fa-edit me-1"></i>Sửa
                                         </a>
@@ -413,6 +416,7 @@
                                            onclick="return confirm('Xóa sản phẩm này?')">
                                             <i class="fas fa-trash me-1"></i>Xóa
                                         </a>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>

@@ -6,6 +6,14 @@ if (isset($_SESSION['cart'])) {
         $cartCount += $item['quantity'];
     }
 }
+
+// Load AuthHelper nếu chưa có
+if (!class_exists('AuthHelper')) {
+    require_once 'app/helpers/AuthHelper.php';
+}
+$_loggedIn   = AuthHelper::isLoggedIn();
+$_isAdmin    = AuthHelper::isAdmin();
+$_authUser   = AuthHelper::getUser();
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -224,6 +232,16 @@ if (isset($_SESSION['cart'])) {
         <div>
             <a href="/Order/lookup"><i class="fas fa-truck me-1"></i> Tra cứu đơn hàng</a>
             &nbsp;|&nbsp;
+            <?php if ($_loggedIn && $_authUser): ?>
+                <a href="/User/profile"><i class="fas fa-user-circle me-1"></i> <?= htmlspecialchars($_authUser['name']) ?></a>
+                &nbsp;|&nbsp;
+                <a href="/Auth/logout"><i class="fas fa-sign-out-alt me-1"></i> Đăng xuất</a>
+            <?php else: ?>
+                <a href="/Auth/login"><i class="fas fa-sign-in-alt me-1"></i> Đăng nhập</a>
+                &nbsp;|&nbsp;
+                <a href="/Auth/register"><i class="fas fa-user-plus me-1"></i> Đăng ký</a>
+            <?php endif; ?>
+            &nbsp;|&nbsp;
             <a href="#"><i class="fas fa-headset me-1"></i> Hỗ trợ</a>
         </div>
     </div>
@@ -251,21 +269,24 @@ if (isset($_SESSION['cart'])) {
                 <i class="fas fa-search"></i>
             </button>
 
-            <!-- Admin dropdown -->
+            <!-- Admin dropdown (chỉ hiện khi là Admin) -->
+            <?php if ($_isAdmin): ?>
             <div class="dropdown d-none d-md-block">
                 <a href="#" class="nav-icon-btn dropdown-toggle" data-bs-toggle="dropdown">
                     <i class="fas fa-cog"></i>
                     <span>Quản trị</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius: 10px; min-width: 200px;">
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius: 10px; min-width: 220px;">
                     <li><h6 class="dropdown-header text-danger fw-bold">Quản lý hệ thống</h6></li>
                     <li><a class="dropdown-item" href="/Product/add"><i class="fas fa-plus-circle me-2 text-success"></i>Thêm sản phẩm</a></li>
                     <li><a class="dropdown-item" href="/Category"><i class="fas fa-layer-group me-2 text-primary"></i>Quản lý danh mục</a></li>
                     <li><a class="dropdown-item" href="/Category/add"><i class="fas fa-folder-plus me-2 text-warning"></i>Thêm danh mục</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="/Order/admin"><i class="fas fa-list-alt me-2 text-danger"></i>Quản lý đơn hàng</a></li>
+                    <li><a class="dropdown-item" href="/User/adminList"><i class="fas fa-users-cog me-2 text-info"></i>Quản lý người dùng</a></li>
                 </ul>
             </div>
+            <?php endif; ?>
 
             <!-- Order lookup -->
             <a href="/Order/lookup" class="nav-icon-btn d-none d-md-flex">
@@ -281,6 +302,53 @@ if (isset($_SESSION['cart'])) {
                     <span class="cart-badge"><?= $cartCount ?></span>
                 <?php endif; ?>
             </a>
+
+            <!-- User account -->
+            <?php if ($_loggedIn && $_authUser): ?>
+            <div class="dropdown">
+                <?php
+                $navAvatar = !empty($_authUser['avatar'])
+                    ? '/public/uploads/avatars/' . htmlspecialchars($_authUser['avatar'])
+                    : 'https://ui-avatars.com/api/?name=' . urlencode($_authUser['name']) . '&size=36&background=fff&color=d70018&bold=true';
+                ?>
+                <a href="#" class="nav-icon-btn dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="dropdown" style="padding:4px 8px;">
+                    <img src="<?= $navAvatar ?>" alt=""
+                         style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.5);">
+                    <span class="d-none d-md-inline" style="max-width:100px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px;">
+                        <?= htmlspecialchars($_authUser['name']) ?>
+                    </span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius:10px; min-width:200px;">
+                    <li class="px-3 py-2">
+                        <div class="fw-bold" style="font-size:14px;"><?= htmlspecialchars($_authUser['name']) ?></div>
+                        <div class="text-muted small"><?= htmlspecialchars($_authUser['email']) ?></div>
+                        <span class="badge mt-1 <?= $_authUser['role'] === 'admin' ? 'bg-danger' : 'bg-secondary' ?>">
+                            <?= $_authUser['role'] === 'admin' ? 'Admin' : 'User' ?>
+                        </span>
+                    </li>
+                    <li><hr class="dropdown-divider my-1"></li>
+                    <li><a class="dropdown-item" href="/User/profile"><i class="fas fa-user-circle me-2 text-primary"></i>Hồ sơ cá nhân</a></li>
+                    <li><a class="dropdown-item" href="/Auth/changePassword"><i class="fas fa-key me-2 text-warning"></i>Đổi mật khẩu</a></li>
+                    <?php if ($_isAdmin): ?>
+                        <li><hr class="dropdown-divider my-1"></li>
+                        <li><a class="dropdown-item" href="/User/adminList"><i class="fas fa-users-cog me-2 text-info"></i>Quản lý Users</a></li>
+                    <?php endif; ?>
+                    <li><hr class="dropdown-divider my-1"></li>
+                    <li>
+                        <a class="dropdown-item text-danger" href="/Auth/logout"
+                           onclick="return confirm('Bạn có chắc muốn đăng xuất?')">
+                            <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <?php else: ?>
+            <!-- Nút đăng nhập khi chưa đăng nhập -->
+            <a href="/Auth/login" class="nav-icon-btn">
+                <i class="fas fa-user"></i>
+                <span>Đăng nhập</span>
+            </a>
+            <?php endif; ?>
         </div>
     </div>
 </nav>
@@ -295,11 +363,21 @@ if (isset($_SESSION['cart'])) {
 
 <!-- FLASH MESSAGE -->
 <?php if (isset($_SESSION['flash'])): ?>
-    <div class="flash-message alert alert-<?= $_SESSION['flash']['type'] ?> alert-dismissible shadow" role="alert">
-        <i class="fas fa-check-circle me-2"></i><?= htmlspecialchars($_SESSION['flash']['message']) ?>
+    <?php
+    $flashType = htmlspecialchars($_SESSION['flash']['type']);
+    $flashMsg  = $_SESSION['flash']['message']; // Cho phép HTML an toàn trong message
+    $flashIcon = match($flashType) {
+        'success' => 'fa-check-circle',
+        'danger'  => 'fa-times-circle',
+        'warning' => 'fa-exclamation-triangle',
+        default   => 'fa-info-circle',
+    };
+    unset($_SESSION['flash']);
+    ?>
+    <div class="flash-message alert alert-<?= $flashType ?> alert-dismissible shadow" role="alert">
+        <i class="fas <?= $flashIcon ?> me-2"></i><?= $flashMsg ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
-    <?php unset($_SESSION['flash']); ?>
 <?php endif; ?>
 
 <script>

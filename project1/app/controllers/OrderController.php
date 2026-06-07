@@ -1,6 +1,7 @@
 <?php
 require_once('app/config/database.php');
 require_once('app/models/OrderModel.php');
+require_once('app/helpers/AuthHelper.php');
 
 class OrderController {
     private $db;
@@ -63,6 +64,7 @@ class OrderController {
     // ADMIN: Danh sách đơn hàng  /Order/admin
     // ============================================================
     public function admin() {
+        AuthHelper::requireAdmin();
         $status  = trim($_GET['status']  ?? '');
         $search  = trim($_GET['search']  ?? '');
         $page    = max(1, (int)($_GET['page'] ?? 1));
@@ -80,6 +82,7 @@ class OrderController {
 
     // ADMIN: Chi tiết + đổi trạng thái  /Order/adminDetail/5
     public function adminDetail($id) {
+        AuthHelper::requireAdmin();
         $order = $this->orderModel->getOrderById($id);
         if (!$order) {
             $_SESSION['flash'] = ['type' => 'danger', 'message' => 'Đơn hàng không tồn tại.'];
@@ -93,6 +96,7 @@ class OrderController {
 
     // ADMIN: Cập nhật trạng thái  POST /Order/updateStatus
     public function updateStatus() {
+        AuthHelper::requireAdmin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: /Order/admin');
             exit;
@@ -116,6 +120,7 @@ class OrderController {
 
     // ADMIN: Lưu ghi chú  POST /Order/saveNote
     public function saveNote() {
+        AuthHelper::requireAdmin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: /Order/admin');
             exit;
@@ -134,6 +139,7 @@ class OrderController {
 
     // ADMIN: Xoá đơn hàng  /Order/delete/5
     public function delete($id) {
+        AuthHelper::requireAdmin();
         if ($this->orderModel->deleteOrder($id)) {
             $_SESSION['flash'] = ['type' => 'success',
                 'message' => 'Đã xoá đơn hàng #' . str_pad($id, 6, '0', STR_PAD_LEFT)];

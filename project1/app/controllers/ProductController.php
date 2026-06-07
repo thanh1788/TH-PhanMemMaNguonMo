@@ -4,6 +4,7 @@
 require_once('app/config/database.php');
 require_once('app/models/ProductModel.php');
 require_once('app/models/CategoryModel.php');
+require_once('app/helpers/AuthHelper.php');
 
 class ProductController
 {
@@ -69,6 +70,7 @@ class ProductController
     // Giao diện thêm sản phẩm
     public function add()
     {
+        AuthHelper::requireAdmin();
         $categories = (new CategoryModel($this->db))->getCategories();
         include_once 'app/views/product/add.php';
     }
@@ -76,6 +78,7 @@ class ProductController
     // Xử lý lưu sản phẩm mới kèm tải ảnh lên
     public function save()
     {
+        AuthHelper::requireAdmin();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = $_POST['name'] ?? '';
             $description = $_POST['description'] ?? '';
@@ -123,6 +126,7 @@ class ProductController
     // Giao diện chỉnh sửa sản phẩm
     public function edit($id)
     {
+        AuthHelper::requireAdmin();
         $product = $this->productModel->getProductById($id);
         $categories = (new CategoryModel($this->db))->getCategories();
         
@@ -136,6 +140,7 @@ class ProductController
     // Xử lý cập nhật sản phẩm kèm đổi ảnh
     public function update()
     {
+        AuthHelper::requireAdmin();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'];
             $name = $_POST['name'];
@@ -185,6 +190,7 @@ class ProductController
     // Xóa sản phẩm và dọn sạch ảnh tương ứng trên server
     public function delete($id)
     {
+        AuthHelper::requireAdmin();
         $product = $this->productModel->getProductById($id);
 
         if ($product) {
