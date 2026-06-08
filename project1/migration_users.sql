@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     `status`         ENUM('active','locked') NOT NULL DEFAULT 'active',
     `is_verified`    TINYINT(1)   NOT NULL DEFAULT 0,
     `verify_token`   VARCHAR(64)  DEFAULT NULL,
-    `reset_token`    VARCHAR(64)  DEFAULT NULL,
+    `reset_token`    VARCHAR(128)  DEFAULT NULL,
     `reset_expires`  DATETIME     DEFAULT NULL,
     `remember_token` VARCHAR(64)  DEFAULT NULL,
     `created_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

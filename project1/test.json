@@ -1,0 +1,447 @@
+{
+	"info": {
+		"name": "PHP RESTful API Testing",
+		"description": "Bộ sưu tập test các API Controller (Product, Order, User) sau khi chuyển đổi sang Pure API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. PRODUCT API",
+			"item": [
+				{
+					"name": "Lấy danh sách sản phẩm",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Product/index",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Product",
+								"index"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tìm kiếm sản phẩm",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Product/search?q=điện thoại",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Product",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "điện thoại"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xem chi tiết sản phẩm",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Product/show/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Product",
+								"show",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Thêm sản phẩm mới (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Sản phẩm Test Postman",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Mô tả sản phẩm được tạo từ Postman",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "150000",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [],
+									"description": "Chọn một file ảnh bất kỳ để test upload"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/Product/save",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Product",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cập nhật sản phẩm (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Tên sản phẩm sau cập nhật",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Mô tả mới",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "180000",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [],
+									"description": "Có thể để trống nếu không muốn đổi ảnh"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/Product/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Product",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Xóa sản phẩm (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Product/delete/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Product",
+								"delete",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. ORDER API",
+			"item": [
+				{
+					"name": "Khách hàng: Tra cứu đơn hàng theo SĐT",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone\": \"0987654321\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/Order/lookup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Order",
+								"lookup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Khách hàng: Chi tiết đơn hàng",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Order/detail/5?phone=0987654321",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Order",
+								"detail",
+								"5"
+							],
+							"query": [
+								{
+									"key": "phone",
+									"value": "0987654321"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Danh sách đơn hàng",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Order/admin?status=pending&page=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Order",
+								"admin"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "pending"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Cập nhật trạng thái đơn hàng",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 5,\n    \"status\": \"completed\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/Order/updateStatus",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Order",
+								"updateStatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Lưu ghi chú đơn hàng",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 5,\n    \"note\": \"Khách hẹn giao giờ hành chính\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/Order/saveNote",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Order",
+								"saveNote"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. USER API",
+			"item": [
+				{
+					"name": "User: Xem hồ sơ cá nhân",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/User/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"User",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Cập nhật thông tin hồ sơ",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\": \"Nguyễn Văn A\",\n    \"phone\": \"0912345678\",\n    \"address\": \"123 Đường ABC, Quận 1\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/User/updateProfile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"User",
+								"updateProfile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User: Tải lên ảnh đại diện",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": [],
+									"description": "Chọn file ảnh avatar dưới 2MB"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/User/uploadAvatar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"User",
+								"uploadAvatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Thay đổi vai trò (Role) thành viên",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 10,\n    \"role\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/User/updateRole",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"User",
+								"updateRole"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

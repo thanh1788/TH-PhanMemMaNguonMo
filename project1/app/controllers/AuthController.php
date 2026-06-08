@@ -220,7 +220,7 @@ class AuthController
     // ĐẶT LẠI MẬT KHẨU
     // ============================================================
 
-    public function resetPassword($token)
+    public function resetPassword($token = '')
     {
         $user = $this->userModel->findByResetToken($token);
         if (!$user) {

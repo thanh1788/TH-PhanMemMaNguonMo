@@ -148,13 +148,13 @@ class UserModel
 
     public function setResetToken(int $id, string $token): bool
     {
-        $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        // Dùng NOW() của MySQL để tránh lệch múi giờ giữa PHP và MySQL
         $stmt = $this->conn->prepare(
             "UPDATE {$this->table} 
-             SET reset_token = :token, reset_expires = :expires 
+             SET reset_token = :token, reset_expires = DATE_ADD(NOW(), INTERVAL 1 HOUR)
              WHERE id = :id"
         );
-        return $stmt->execute([':token' => $token, ':expires' => $expires, ':id' => $id]);
+        return $stmt->execute([':token' => $token, ':id' => $id]);
     }
 
     public function clearResetToken(int $id): bool

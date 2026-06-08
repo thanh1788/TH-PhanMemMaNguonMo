@@ -1,9 +1,23 @@
 <?php
 /**
- * AuthHelper - Kiểm tra phân quyền và trạng thái đăng nhập
+ * AuthHelper - Kiểm tra phân quyền và trạng thái đăng nhập cho RESTful API
  */
 class AuthHelper
 {
+    /**
+     * Hàm helper nội bộ xuất phản hồi JSON lỗi bảo mật và dừng chương trình
+     */
+    private static function jsonAuthError(string $message, int $statusCode): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code($statusCode);
+        echo json_encode([
+            'success' => false,
+            'message' => $message
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     /**
      * Kiểm tra người dùng đã đăng nhập chưa
      */
@@ -21,28 +35,23 @@ class AuthHelper
     }
 
     /**
-     * Yêu cầu đăng nhập - chuyển hướng nếu chưa đăng nhập
+     * Yêu cầu đăng nhập - Trả về JSON 401 Unauthorized thay vì chuyển hướng HTML
      */
-    public static function requireLogin(string $redirect = '/Auth/login'): void
+    public static function requireLogin(): void
     {
         if (!self::isLoggedIn()) {
-            $_SESSION['flash'] = ['type' => 'warning', 'message' => 'Vui lòng đăng nhập để tiếp tục.'];
-            $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'] ?? '/';
-            header('Location: ' . $redirect);
-            exit;
+            self::jsonAuthError('Yêu cầu từ chối: Bạn cần đăng nhập để thực hiện hành động này.', 401);
         }
     }
 
     /**
-     * Yêu cầu quyền Admin
+     * Yêu cầu quyền Admin - Trả về JSON 403 Forbidden thay vì chuyển hướng HTML
      */
     public static function requireAdmin(): void
     {
         self::requireLogin();
         if (!self::isAdmin()) {
-            $_SESSION['flash'] = ['type' => 'danger', 'message' => 'Bạn không có quyền truy cập trang này.'];
-            header('Location: /');
-            exit;
+            self::jsonAuthError('Quyền truy cập bị từ chối: Hành động này chỉ dành cho tài khoản Quản trị viên (Admin).', 403);
         }
     }
 
@@ -55,7 +64,7 @@ class AuthHelper
     }
 
     /**
-     * Lấy thông tin người dùng từ session
+     * Lấy thông tin người dùng từ session dưới dạng mảng để phản hồi API
      */
     public static function getUser(): ?array
     {
@@ -70,7 +79,7 @@ class AuthHelper
     }
 
     /**
-     * Đăng nhập user vào session
+     * Đăng nhập user vào session (Dùng khi xử lý API đăng nhập thành công hoặc Auto-login)
      */
     public static function loginSession(object $user): void
     {
